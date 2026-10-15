@@ -1,0 +1,12 @@
+﻿<?xml version="1.0"?>
+<DTS:ConnectionManager xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:ObjectName="DESKTOP-7TUVVME.retail_stg"
+  DTS:DTSID="{E6F3320D-E933-4F54-B1DA-1BEC42F33733}"
+  DTS:CreationName="OLEDB">
+  <DTS:ObjectData>
+    <DTS:ConnectionManager
+      DTS:ConnectRetryCount="1"
+      DTS:ConnectRetryInterval="5"
+      DTS:ConnectionString="Data Source=DESKTOP-7TUVVME;Initial Catalog=retail_stg;Provider=SQLOLEDB.1;Integrated Security=SSPI;Application Name=SSIS-Retail_pipeline-{E6F3320D-E933-4F54-B1DA-1BEC42F33733}DESKTOP-7TUVVME.retail_stg;Auto Translate=False;" />
+  </DTS:ObjectData>
+</DTS:ConnectionManager>
