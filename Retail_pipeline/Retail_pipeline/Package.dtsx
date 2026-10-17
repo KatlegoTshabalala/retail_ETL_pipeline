@@ -11,8 +11,8 @@
   DTS:LocaleID="7177"
   DTS:ObjectName="Package"
   DTS:PackageType="5"
-  DTS:VersionBuild="15"
-  DTS:VersionGUID="{659E7CFD-F169-4CEE-8BD2-934260A7B8A9}">
+  DTS:VersionBuild="18"
+  DTS:VersionGUID="{B3F73AAF-BF49-4AAB-8787-67E71AA9B981}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -248,30 +248,13 @@
   <DTS:Variables />
   <DTS:Executables>
     <DTS:Executable
-      DTS:refId="Package\Create DWH"
-      DTS:CreationName="Microsoft.ExecuteSQLTask"
-      DTS:Description="Execute SQL Task"
-      DTS:DTSID="{C2993D46-855E-4ED2-800B-AA1560CC6E34}"
-      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
-      DTS:LocaleID="-1"
-      DTS:ObjectName="Create DWH"
-      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-      DTS:ThreadHint="0">
-      <DTS:Variables />
-      <DTS:ObjectData>
-        <SQLTask:SqlTaskData
-          SQLTask:Connection="{61AFD1F3-B901-46A7-B05F-29983DD3F483}"
-          SQLTask:SqlStatementSource="IF NOT EXISTS (SELECT 1 FROM sys.databases WHERE name = N'retail_dwh')&#xA;BEGIN&#xA;    CREATE DATABASE retail_dwh;&#xA;END&#xA;GO&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
-      </DTS:ObjectData>
-    </DTS:Executable>
-    <DTS:Executable
-      DTS:refId="Package\Create retail_stg"
+      DTS:refId="Package\01_Create retail_stg"
       DTS:CreationName="Microsoft.ExecuteSQLTask"
       DTS:Description="Execute SQL Task"
       DTS:DTSID="{EDAE6CAE-C319-4E3C-96A8-8FA3B036DF2E}"
       DTS:ExecutableType="Microsoft.ExecuteSQLTask"
       DTS:LocaleID="-1"
-      DTS:ObjectName="Create retail_stg"
+      DTS:ObjectName="01_Create retail_stg"
       DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
       DTS:ThreadHint="0">
       <DTS:Variables />
@@ -282,13 +265,30 @@
       </DTS:ObjectData>
     </DTS:Executable>
     <DTS:Executable
-      DTS:refId="Package\create schemas"
+      DTS:refId="Package\02_Create DWH"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{C2993D46-855E-4ED2-800B-AA1560CC6E34}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="02_Create DWH"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{61AFD1F3-B901-46A7-B05F-29983DD3F483}"
+          SQLTask:SqlStatementSource="IF NOT EXISTS (SELECT 1 FROM sys.databases WHERE name = N'retail_dwh')&#xA;BEGIN&#xA;    CREATE DATABASE retail_dwh;&#xA;END&#xA;GO&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\03_create schemas"
       DTS:CreationName="Microsoft.ExecuteSQLTask"
       DTS:Description="Execute SQL Task"
       DTS:DTSID="{AA15DFFC-08EF-4C65-A9EC-9BD081A2AFD1}"
       DTS:ExecutableType="Microsoft.ExecuteSQLTask"
       DTS:LocaleID="-1"
-      DTS:ObjectName="create schemas"
+      DTS:ObjectName="03_create schemas"
       DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
       DTS:ThreadHint="0">
       <DTS:Variables />
@@ -299,8 +299,26 @@
       </DTS:ObjectData>
     </DTS:Executable>
     <DTS:Executable
+      DTS:refId="Package\04_Create bronze table"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{7B681B19-5E9C-4E13-8D07-25E7E85BB84F}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="04_Create bronze table"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{E1B8BF35-7727-49D9-A3AD-6CD10476DF82}"
+          SQLTask:SqlStatementSource="IF NOT EXISTS (&#xA;    SELECT 1&#xA;    FROM sys.tables t&#xA;    JOIN sys.schemas s ON s.schema_id = t.schema_id&#xA;    WHERE s.name = N'bronze' AND t.name = N'retail_raw_data'&#xA;)&#xA;BEGIN&#xA;    CREATE TABLE bronze.retail_raw_data (&#xA;        [Transaction ID]   VARCHAR(50),&#xA;        [Date]             VARCHAR(50),&#xA;        [Customer ID]      VARCHAR(50),&#xA;        [Gender]           VARCHAR(50),&#xA;        [Age]              VARCHAR(50),&#xA;        [Product Category] VARCHAR(50),&#xA;        [Quantity]         VARCHAR(50),&#xA;        [Price per Unit]   VARCHAR(50),&#xA;        [Total Amount]     VARCHAR(50)&#xA;    );&#xA;END" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
       DTS:refId="Package\Data Flow Task"
       DTS:CreationName="Microsoft.Pipeline"
+      DTS:DelayValidation="True"
       DTS:Description="Data Flow Task"
       DTS:DTSID="{93098927-3573-4FA8-8672-D955E15B7287}"
       DTS:ExecutableType="Microsoft.Pipeline"
@@ -636,6 +654,7 @@
               description="OLE DB Destination"
               name="OLE DB Destination"
               usesDispositions="true"
+              validateExternalMetadata="False"
               version="4">
               <properties>
                 <property
@@ -645,7 +664,7 @@
                 <property
                   dataType="System.String"
                   description="Specifies the name of the database object used to open a rowset."
-                  name="OpenRowset">[raw_data]</property>
+                  name="OpenRowset">[dbo].[retail_data_raw]</property>
                 <property
                   dataType="System.String"
                   description="Specifies the variable that contains the name of the database object used to open a rowset."
@@ -688,8 +707,8 @@
               <connections>
                 <connection
                   refId="Package\Data Flow Task\OLE DB Destination.Connections[OleDbConnection]"
-                  connectionManagerID="Package.ConnectionManagers[DESKTOP-7TUVVME.retail_stg]"
-                  connectionManagerRefId="Package.ConnectionManagers[DESKTOP-7TUVVME.retail_stg]"
+                  connectionManagerID="{61AFD1F3-B901-46A7-B05F-29983DD3F483}:external"
+                  connectionManagerRefId="Project.ConnectionManagers[DESKTOP-7TUVVME]"
                   description="The OLE DB runtime connection used to access the database."
                   name="OleDbConnection" />
               </connections>
@@ -875,25 +894,33 @@
       DTS:refId="Package.PrecedenceConstraints[Constraint]"
       DTS:CreationName=""
       DTS:DTSID="{7B1F7A1A-239A-4A36-B9A8-C405162CCDD2}"
-      DTS:From="Package\Create retail_stg"
+      DTS:From="Package\01_Create retail_stg"
       DTS:LogicalAnd="True"
       DTS:ObjectName="Constraint"
-      DTS:To="Package\Create DWH" />
+      DTS:To="Package\02_Create DWH" />
     <DTS:PrecedenceConstraint
       DTS:refId="Package.PrecedenceConstraints[Constraint 1]"
       DTS:CreationName=""
       DTS:DTSID="{15C3AE57-DBCF-47F6-8114-27304C916894}"
-      DTS:From="Package\Create DWH"
+      DTS:From="Package\02_Create DWH"
       DTS:LogicalAnd="True"
       DTS:ObjectName="Constraint 1"
-      DTS:To="Package\create schemas" />
+      DTS:To="Package\03_create schemas" />
     <DTS:PrecedenceConstraint
       DTS:refId="Package.PrecedenceConstraints[Constraint 2]"
       DTS:CreationName=""
-      DTS:DTSID="{16D19FC0-3D3B-418C-B211-FD3B7A7F546F}"
-      DTS:From="Package\create schemas"
+      DTS:DTSID="{05DFA04C-EF5E-427D-AC29-215EAFCE6E91}"
+      DTS:From="Package\03_create schemas"
       DTS:LogicalAnd="True"
       DTS:ObjectName="Constraint 2"
+      DTS:To="Package\04_Create bronze table" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 3]"
+      DTS:CreationName=""
+      DTS:DTSID="{AC5DC879-FAE9-4CE2-8208-6FD3624D0524}"
+      DTS:From="Package\04_Create bronze table"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 3"
       DTS:To="Package\Data Flow Task" />
   </DTS:PrecedenceConstraints>
   <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
@@ -907,19 +934,23 @@
     design-time-name="Package">
     <LayoutInfo>
       <GraphLayout
-        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
-        <NodeLayout
-          Size="154.4,41.6"
-          Id="Package\Create retail_stg"
-          TopLeft="35.5,35.5" />
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
           Size="164.8,41.6"
-          Id="Package\Create DWH"
+          Id="Package\02_Create DWH"
           TopLeft="52.1666673951678,127.899999566078" />
         <NodeLayout
-          Size="164.8,41.6"
-          Id="Package\create schemas"
+          Size="154.4,41.6"
+          Id="Package\01_Create retail_stg"
+          TopLeft="35.5,35.5" />
+        <NodeLayout
+          Size="168.8,41.6"
+          Id="Package\03_create schemas"
           TopLeft="112.16666575604,196.899999294877" />
+        <NodeLayout
+          Size="150.4,41.6"
+          Id="Package\Data Flow Task"
+          TopLeft="297.166662204597,352.433332381116" />
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint]"
           TopLeft="112.7,77.1">
@@ -960,26 +991,26 @@
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="59.9999983608724,27.3999997287989"
+              EndConnector="61.9999983608722,27.399999728799"
               Start="0,0"
-              End="59.9999983608724,19.8999997287989">
+              End="61.9999983608722,19.899999728799">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,9.69999986439943" />
+                    End="0,9.6999998643995" />
                   <mssgle:CubicBezierSegment
-                    Point1="0,9.69999986439943"
-                    Point2="0,13.6999998643994"
-                    Point3="4,13.6999998643994" />
+                    Point1="0,9.6999998643995"
+                    Point2="0,13.6999998643995"
+                    Point3="4,13.6999998643995" />
                   <mssgle:LineSegment
-                    End="55.9999983608724,13.6999998643994" />
+                    End="57.9999983608722,13.6999998643995" />
                   <mssgle:CubicBezierSegment
-                    Point1="55.9999983608724,13.6999998643994"
-                    Point2="59.9999983608724,13.6999998643994"
-                    Point3="59.9999983608724,17.6999998643994" />
+                    Point1="57.9999983608722,13.6999998643995"
+                    Point2="61.9999983608722,13.6999998643995"
+                    Point3="61.9999983608722,17.6999998643995" />
                   <mssgle:LineSegment
-                    End="59.9999983608724,19.8999997287989" />
+                    End="61.9999983608722,19.899999728799" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -989,35 +1020,69 @@
           </EdgeLayout.Labels>
         </EdgeLayout>
         <NodeLayout
-          Size="150.4,41.6"
-          Id="Package\Data Flow Task"
-          TopLeft="211.33333356099,306.499999367197" />
+          Size="187.2,41.6"
+          Id="Package\04_Create bronze table"
+          TopLeft="202.499988935888,263.466664834552" />
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint 2]"
-          TopLeft="194.56666575604,238.499999294877">
+          TopLeft="196.56666575604,238.499999294877">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="91.9666678049497,68.0000000723203"
+              EndConnector="99.5333231798482,24.9666655396754"
               Start="0,0"
-              End="91.9666678049497,60.5000000723203">
+              End="99.5333231798482,17.4666655396754">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,30.0000000361601" />
+                    End="0,8.48333276983769" />
                   <mssgle:CubicBezierSegment
-                    Point1="0,30.0000000361601"
-                    Point2="0,34.0000000361601"
-                    Point3="4,34.0000000361601" />
+                    Point1="0,8.48333276983769"
+                    Point2="0,12.4833327698377"
+                    Point3="4,12.4833327698377" />
                   <mssgle:LineSegment
-                    End="87.9666678049497,34.0000000361601" />
+                    End="95.5333231798482,12.4833327698377" />
                   <mssgle:CubicBezierSegment
-                    Point1="87.9666678049497,34.0000000361601"
-                    Point2="91.9666678049497,34.0000000361601"
-                    Point3="91.9666678049497,38.0000000361601" />
+                    Point1="95.5333231798482,12.4833327698377"
+                    Point2="99.5333231798482,12.4833327698377"
+                    Point3="99.5333231798482,16.4833327698377" />
                   <mssgle:LineSegment
-                    End="91.9666678049497,60.5000000723203" />
+                    End="99.5333231798482,17.4666655396754" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 3]"
+          TopLeft="296.099988935888,305.066664834552">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="76.2666732687086,47.3666675465633"
+              Start="0,0"
+              End="76.2666732687086,39.8666675465633">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,19.6833337732816" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,19.6833337732816"
+                    Point2="0,23.6833337732816"
+                    Point3="4,23.6833337732816" />
+                  <mssgle:LineSegment
+                    End="72.2666732687086,23.6833337732816" />
+                  <mssgle:CubicBezierSegment
+                    Point1="72.2666732687086,23.6833337732816"
+                    Point2="76.2666732687086,23.6833337732816"
+                    Point3="76.2666732687086,27.6833337732816" />
+                  <mssgle:LineSegment
+                    End="76.2666732687086,39.8666675465633" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -1035,13 +1100,13 @@
       <GraphLayout
         Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
-          Size="151.2,41.6"
-          Id="Package\Data Flow Task\Flat File Source"
-          TopLeft="39.4999994933605,11.499999910593" />
-        <NodeLayout
           Size="171.2,41.6"
           Id="Package\Data Flow Task\OLE DB Destination"
           TopLeft="142.499998405576,106.499998942018" />
+        <NodeLayout
+          Size="151.2,41.6"
+          Id="Package\Data Flow Task\Flat File Source"
+          TopLeft="39.4999994933605,11.499999910593" />
         <EdgeLayout
           Id="Package\Data Flow Task.Paths[Flat File Source Output]"
           TopLeft="115.099999493361,53.099999910593">
